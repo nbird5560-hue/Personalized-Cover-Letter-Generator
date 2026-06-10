@@ -10,7 +10,7 @@ CRITICAL INSTRUCTIONS:
 - Only reference experiences, projects, and skills supported by the resume.
 - Ensure there are no uses of emdash "–".
 - Collect related sentences together.
-- Conclude the revised letter by signing exactly as "Nicholas Bird".
+- Conclude the revised letter by signing as the user's name.
 - Use two spaces '  ' after periods '.'.
 
 [INPUT DATA]
