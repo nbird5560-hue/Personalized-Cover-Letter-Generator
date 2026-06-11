@@ -7,7 +7,8 @@ Review the provided cover letter against the job description and resume, then re
 
 CRITICAL INSTRUCTIONS:
 - Do not address the user in your response.
-- Only reference experiences, projects, and skills supported by the resume.
+- Start the output with addressing the appropriate hiring manager or team.
+- Only reference experiences and projects supported by the resume.  Skills can be inferred.
 - Ensure there are no uses of emdash "–".
 - Collect related sentences together.
 - Conclude the revised letter by signing as the user's name.
@@ -32,5 +33,5 @@ CRITICAL INSTRUCTIONS:
         jd=job_description, 
         res=resume
     )
-    output = ask_llm(final_prompt)
+    output = ask_llm(final_prompt, "deepseek-r1:8b")
     return output

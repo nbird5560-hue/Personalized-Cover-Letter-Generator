@@ -2,7 +2,7 @@ from llm import ask_llm
 def write_cover_letter(
         resume,
         style_profile,
-        job_description
+        writing_strategy
 ):
     prompt = f"""
 Use the writing style below
@@ -15,22 +15,28 @@ RESUMES:
 
 {resume}
 
-JOB DESCRIPTION:
+WRITING STRATEGY:
 
-{job_description}
+{writing_strategy}
 
-In the job description, ignore information irrelevant to the role.
+------------------
+
+Based on the writing strategy:
 
 Write a professional cover letter.
 
 Use the provided writing style.
 
-Only reference experiences, projects, and skills supported by the resume.
+Only reference experiences and projects, supported by the resume.  Skills may be inferred.
 
 Focus on experiences and projects over education.
 
 Limit usage of 'With a ..."
 
 Use two spaces "  " after periods ".".
+
+Avoid overly enthusiastic corporate clichés.
+
+Keep it under 300 words."
 """
-    return ask_llm(prompt)
+    return ask_llm(prompt, model="qwen3:4b")

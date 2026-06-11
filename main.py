@@ -7,6 +7,7 @@ from fpdf import FPDF
 from config import (printss, load_resume, load_writing_samples, Chimes)
 from output_file_creation import choose_output_type
 from llm import ask_llm
+from description_analysis import analyze_job_description
 import time
 import sys
 
@@ -35,13 +36,16 @@ printss("Loading job description")
 job = load_job_description()
 printss("Job description loaded")
 
+printss("Analyzing Job Description")
+job_notes = analyze_job_description(job[0], resume)
+Chimes.progress_chime()
+
 printss("Initializing cover letter creation")   
 letter = write_cover_letter(
     resume,
     style,
     job[0]
 )
-printss("Ending cover letter creation")
 Chimes.progress_chime()
 
 printss("Revising Cover Letter")
@@ -53,8 +57,8 @@ criticism = revise_cover_letter(
 printss("Internal processes ended")
 # Timing
 end_time = time.time()
-execution_time = (end_time - start_time)/60
-print(f"Script executed in {execution_time:.4f} minutes\n")
+execution_time = end_time - start_time
+print(f"Script executed in {execution_time:.4f} seconds\n")
 Chimes.ending_chime()
 
 # Output type

@@ -1,10 +1,10 @@
 from pick import pick
 from fpdf import FPDF
 from pathlib import Path
-# Import Document from python-docx
 from docx import Document
 from docx.shared import Inches
 import re
+from llm import clean_xml_string
 
 def choose_output_type(text, role, company):
     # Added '.docx' to the picking options
@@ -16,7 +16,7 @@ def choose_output_type(text, role, company):
     output_dir.mkdir(parents=True, exist_ok=True)
 
     def clean_filename(path: str):
-        return re.sub(r'[^a-zA-Z0-9_. -]', '', path).strip('.-')
+        return re.sub(r'[^a-zA-Z0-9_. -]', '', path).strip('-')
         
     # Constructing clean paths using pathlib
     base_filename = clean_filename(f"{company} - {role} - Cover Letter")
@@ -26,6 +26,9 @@ def choose_output_type(text, role, company):
     txt_path = output_dir / f"{base_filename}.txt"
     
 
+    #text = re.sub(r"\. (.)",".  \1", text) 
+    #text = re.sub(r"—",", ", text) 
+    text = clean_xml_string(text)
 
     def handle_case(index):
         match index:
