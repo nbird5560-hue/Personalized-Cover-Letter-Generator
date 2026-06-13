@@ -14,26 +14,8 @@ def ask_llm(prompt: str, model: str = None):
         selected, index = pick(models, "Pick LLM Model")
         model = models[index]
 
-    # Setup exception
-#    caller_file_abs = Path(inspect.stack()[1].filename).resolve()
-#    project_root = Path.cwd().resolve()
-#    try:
-#        relative_path = caller_file_abs.relative_to(project_root)
-#    except ValueError:
-        # Fallback if the caller is outside of the project root directory
-#        print(f"Caller is outside project root: {caller_file_abs}")
-
-#    if str(relative_path) == "setup.py":
-#        ask_llm.model_chosen = "gemma3:4b"
-
-
-#    if not hasattr(ask_llm, "model_chosen"):
-#        Chimes.input_chime()
-#        selected, index = pick(models, "Pick LLM Model")
-#        ask_llm.model_chosen = models[index]
-
     response = chat(
-        model=model,#getattr(ask_llm, "model_chosen")
+        model=model,
         messages=[
             {
                 "role": "user",

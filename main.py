@@ -3,18 +3,19 @@ from cover_letter_writer import write_cover_letter
 from job_loader import load_job_description
 from criticism_generator import revise_cover_letter
 from pathlib import Path
-from fpdf import FPDF
-from config import (printss, load_resume, load_writing_samples, Chimes)
+from config import (printss, Chimes)
 from output_file_creation import choose_output_type
 from llm import ask_llm
 from description_analysis import analyze_job_description
 import time
 import sys
+import math
 
 start_time = time.time()
 # Loading resume
 printss("Loading Resume")
 
+queued = 1 if len(sys.argv) >= 3 else None
 
 if Path("data/collapsed_resume.txt").is_file():
     with open("data/collapsed_resume.txt", 'r') as f:
@@ -33,7 +34,10 @@ else:
 
 # Loading Job Description
 printss("Loading job description")
-job = load_job_description()
+if queued:
+    job = load_job_description(sys.argv[1])
+else:
+    job = load_job_description()
 printss("Job description loaded")
 
 printss("Analyzing Job Description")
@@ -57,9 +61,18 @@ criticism = revise_cover_letter(
 printss("Internal processes ended")
 # Timing
 end_time = time.time()
-execution_time = end_time - start_time
-print(f"Script executed in {execution_time:.4f} seconds\n")
+execution_time = (end_time - start_time)/60
+minutes = math.trunc(execution_time)
+seconds = math.trunc((execution_time - minutes)*60)
+
+print(f"Script executed in {minutes} minutes and {seconds} seconds\n")
 Chimes.ending_chime()
 
 # Output type
-choose_output_type(criticism, job[1], job[2])
+if queued:
+    output_name = choose_output_type(criticism, job[1], job[2], int(sys.argv[2]))
+else:
+    output_name = choose_output_type(criticism, job[1], job[2])
+
+if queued:
+    print(f"OUTPUT_FILE_NAME:{output_name}; URL: {job[3]}")

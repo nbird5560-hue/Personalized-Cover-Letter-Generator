@@ -27,6 +27,9 @@ CRITICAL INSTRUCTIONS:
 {res}
 </resume>
 
+----
+
+The output should solely a revised cover letter, without addressing the user or including headlines.
 """
     final_prompt = prompt.format(
         cl=cover_letter.strip(), 

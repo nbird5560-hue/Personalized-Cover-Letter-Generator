@@ -4,10 +4,9 @@ import random
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-# Import selenium-stealth
 from selenium_stealth import stealth
 
-def get_job_description():
+def get_job_description(link=None):
     def clean_url(url: str):
         if not isinstance(url, str):
             print("Input is not a string.")
@@ -52,7 +51,11 @@ def get_job_description():
             print("Unsupported URL. Please provide a LinkedIn, Indeed, or Simplify URL.")
             exit()
 
-    input_url = input("Enter LinkedIn, Indeed, or Simplify URL: ")
+    if not link:
+        input_url = input("Enter LinkedIn, Indeed, or Simplify URL: ")
+    else:
+        input_url = link
+
     job_url, platform = clean_url(input_url)
 
     # Anti-anti-scraper methods
@@ -158,7 +161,7 @@ def get_job_description():
         if "description_element" in locals():
             description = description_element.get_text(separator="\n", strip=True)
 
-        return [description, title, company]
+        return [description, title, company, job_url]
 
     finally:
         driver.quit()
