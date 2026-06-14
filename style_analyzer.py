@@ -1,8 +1,6 @@
 from llm import ask_llm
 from config import extract_text_from_dir
 from pathlib import Path
-import unicodedata
-import re
 
 def create_style_profile():
     samples = extract_text_from_dir(Path("./data/writing_samples"))[:6000]# Remediating input overflow

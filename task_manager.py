@@ -1,19 +1,24 @@
 import subprocess
 import sys
+import os
 from pick import pick
 from config import (printss, Chimes)
 
+os.environ["AS_SUBPROCESS"] = True
+
 def update_queue(item):
-    with open("data/process/queue.txt", 'r+') as f1:
+    with open("data/process/queue.txt", 'r') as f1:
         new_contents = f1.read().replace(item, '').strip('\n')
-        f1.write(new_contents)    
+    with open("data/process/queue.txt", 'w') as f1:
+        f1.write(new_contents)
     with open("data/process/in_progress.txt",'w') as f2:
         f2.write(item)
 
 def load_job():
     with open("data/process/job.txt", 'r+') as f1:
         contents = f1.read()
-        f1.write("")
+        f1.seek(0)
+        f1.truncate()
     with open("data/process/queue.txt", 'w') as f2:
         f2.write(contents)
 
@@ -22,6 +27,10 @@ def end_job():
         f1.write("")
     with open("data/process/in_progress.txt", 'w') as f2:
         f2.write("")
+
+def queue_length():
+    with open("data/process/queue.txt", 'r') as f:
+        return len(f.read().splitlines())
 
 
 # Transferring jobs docket to queue
@@ -32,8 +41,8 @@ options = ['.docx', '.pdf', '.txt', 'at terminal']
 selected, index = pick(options, "Pick output type: ")
 
 # Choice to clear completed.txt
-selected, overwrite = pick(["No","Yes"],"Overwrite existing completed.txt?")
-if overwrite:
+selected, overwrite_index = pick(["No","Yes"],"Overwrite existing completed.txt?")
+if overwrite_index:
     with open("data/process/completed.txt", 'w') as f:
         f.write("")
 
@@ -42,6 +51,7 @@ with open("data/process/queue.txt", 'r') as f:
 
 printss("Starting Job")
 for item in queue:
+    printss(f"{queue_length()} items remaining in queue")
     update_queue(item) # Update queue.txt and in_progress.txt
     result = subprocess.run(
         [sys.executable, "main.py", item, str(index)],
@@ -68,5 +78,4 @@ for item in queue:
 end_job()
 
 printss("Queue Completed")
-Chimes.progress_chime()
-Chimes.ending_chime()
+Chimes.terminal_chime()

@@ -1,12 +1,11 @@
-from style_analyzer import create_style_profile
-from cover_letter_writer import write_cover_letter
-from job_loader import load_job_description
-from criticism_generator import revise_cover_letter
-from pathlib import Path
-from config import (printss, Chimes)
+from cover_letter_writer import (write_cover_letter, revise_cover_letter)
+from scraper import load_job_description
 from output_file_creation import choose_output_type
-from llm import ask_llm
 from description_analysis import analyze_job_description
+from config import (printss, Chimes)
+#from criticism_generator import revise_cover_letter
+
+from pathlib import Path
 import time
 import sys
 import math

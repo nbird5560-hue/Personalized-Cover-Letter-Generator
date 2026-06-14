@@ -1,6 +1,6 @@
 import winsound
 import threading
-import time
+import os
 from pathlib import Path
 from pypdf import PdfReader
 import docx
@@ -20,18 +20,24 @@ class Chimes:
 
     @classmethod
     def input_chime(cls):
-        cls.chime1()
+        if not "AS_SUBPROCESS" in os.environ:
+            cls.chime1()
 
     @classmethod
     def progress_chime(cls):
-        cls.chime2()
-        cls.chime1()
+        if not "AS_SUBPROCESS" in os.environ:
+            cls.chime2()
+            cls.chime1()
 
     @classmethod
     def ending_chime(cls):
         cls.chime1()
         cls.chime2()
 
+    @classmethod
+    def terminal_chime(cls):
+        cls.progress_chime()
+        cls.ending_chime()
 
 
 def printss(string):
