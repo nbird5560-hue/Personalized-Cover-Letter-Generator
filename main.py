@@ -1,4 +1,4 @@
-from cover_letter_writer import (write_cover_letter, revise_cover_letter)
+from cover_letter_writer import (write_cover_letter, revise_cover_letter, smooth_cover_letter)
 from scraper import load_job_description
 from output_file_creation import choose_output_type
 from description_analysis import analyze_job_description
@@ -52,11 +52,15 @@ letter = write_cover_letter(
 Chimes.progress_chime()
 
 printss("Revising Cover Letter")
-criticism = revise_cover_letter(
+revised_letter = revise_cover_letter(
     letter,
     job[0],
     resume
 )
+
+printss("Smoothing Cover Letter")
+final_letter = smooth_cover_letter(revised_letter)
+
 printss("Internal processes ended")
 # Timing
 end_time = time.time()
@@ -69,9 +73,9 @@ Chimes.ending_chime()
 
 # Output type
 if queued:
-    output_name = choose_output_type(criticism, job[1], job[2], int(sys.argv[2]))
+    output_name = choose_output_type(final_letter, job[1], job[2], int(sys.argv[2]))
 else:
-    output_name = choose_output_type(criticism, job[1], job[2])
+    output_name = choose_output_type(final_letter, job[1], job[2])
 
 if queued:
     print(f"OUTPUT_FILE_NAME:{output_name}; URL: {job[3]}")

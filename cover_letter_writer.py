@@ -42,7 +42,7 @@ Avoid overly enthusiastic corporate clichés.
 Keep it under 300 words."
 
 """
-    return ask_llm(prompt, model="qwen3:4b")
+    return ask_llm(prompt, model="qwen3:4b", temp=0.7)
 
 
 
@@ -83,5 +83,29 @@ The output should solely a revised cover letter, without addressing the user or 
         jd=job_description, 
         res=resume
     )
-    output = ask_llm(final_prompt, "deepseek-r1:8b")
+    output = ask_llm(final_prompt, "deepseek-r1:8b", temp=0.5)
     return output
+
+
+
+# Letter smoother
+def smooth_cover_letter(cover_letter):
+    prompt = f"""
+"You are an automated text-cleaning tool. Your task is to take the following messy AI-generated text and output only the clean body of the cover letter.
+
+REMOVE any address blocks, date blocks, or contact info at the top.
+
+REMOVE all AI artifacts, conversational filler (e.g., 'Here is the letter'), random markdown symbols, or formatting glitches.
+
+PRESERVE the exact wording, phrasing, and structure of the core paragraphs. Do not paraphrase, do not 'improve' the grammar, and do not alter the professional tone.
+
+Output only the cleaned letter text. Do not include any introductory or concluding remarks."
+
+---
+
+COVER LETTER:
+
+{cover_letter}
+
+"""
+    return ask_llm(prompt, model="qwen3:4b", temp=0)    

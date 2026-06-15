@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 from pypdf import PdfReader
 import docx
+import inspect
 
 class Chimes:
     @staticmethod
@@ -41,7 +42,10 @@ class Chimes:
 
 
 def printss(string):
-    print("\n----" + string + "----")
+    caller_frame = inspect.stack()[1]
+    caller_module = inspect.getmodule(caller_frame[0])
+    if not "AS_SUBPROCESS" in os.environ or  caller_module.__name__ == "task_manager.py": 
+        print("\n----" + string + "----")
 
 
 def extract_text_from_dir(path, setup_instruction="Run setup.py and follow the instructions as given."):
