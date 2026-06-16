@@ -29,7 +29,7 @@ Write a professional cover letter.
 
 Use the provided writing style.
 
-Only reference experiences and projects, supported by the resume.  Skills may be inferred.
+Reference experiences and projects, supported by the resume.  Skills may be inferred.
 
 Focus on experiences and projects over education.
 
