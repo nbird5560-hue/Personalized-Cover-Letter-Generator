@@ -1,6 +1,5 @@
 attr==0.3.2
 backports.statistics==0.1.0
-BeautifulSoup==3.2.2
 beautifulsoup4==4.15.0
 blessed==1.44.0
 brotli==1.2.0
