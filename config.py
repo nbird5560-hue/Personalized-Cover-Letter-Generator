@@ -37,7 +37,8 @@ class Chimes:
 
     @classmethod
     def terminal_chime(cls):
-        cls.progress_chime()
+        cls.chime2()
+        cls.chime1()
         cls.ending_chime()
 
 
@@ -99,6 +100,16 @@ def extract_text_from_dir(path, setup_instruction="Run setup.py and follow the i
 
     return combined_text
 
+def nsep(*args):
+    """
+    Takes a variable number of arguments (or an unpacked list/tuple)
+    and joins them into a string separated by newlines.
+    """
+    if len(args) == 1 and isinstance(args[0], (list, tuple)):
+        items = args[0]
+    else:
+        items = args
+    return "\n".join(str(item) for item in args)    
 
 def load_resume():
     path = Path("data/resume")

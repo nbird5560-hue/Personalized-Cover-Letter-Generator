@@ -47,13 +47,14 @@ Keep it under 300 words."
 
 
 # Revise cover letter
-def revise_cover_letter(cover_letter, job_description, resume):
+def revise_cover_letter(cover_letter, job_description, resume, writing_style):
     prompt = """
 You are a hiring manager for the company receiving this cover letter.
 Review the provided cover letter against the job description and resume, then rewrite it to remediate weaknesses.
 
 CRITICAL INSTRUCTIONS:
 - Do not address the user in your response.
+- Adhere to the writing style provided.
 - Start the output with addressing the appropriate hiring manager or team.
 - Only reference experiences and projects supported by the resume.  Skills can be inferred.
 - Ensure there are no uses of emdash "–".
@@ -74,6 +75,10 @@ CRITICAL INSTRUCTIONS:
 {res}
 </resume>
 
+<writing_style>
+{ws}
+</writing_style>
+
 ----
 
 The output should solely a revised cover letter, without addressing the user or including headlines.
@@ -81,7 +86,8 @@ The output should solely a revised cover letter, without addressing the user or 
     final_prompt = prompt.format(
         cl=cover_letter.strip(), 
         jd=job_description, 
-        res=resume
+        res=resume,
+        ws=writing_style
     )
     output = ask_llm(final_prompt, "deepseek-r1:8b", temp=0.5)
     return output
@@ -91,7 +97,7 @@ The output should solely a revised cover letter, without addressing the user or 
 # Letter smoother
 def smooth_cover_letter(cover_letter):
     prompt = f"""
-"You are an automated text-cleaning tool. Your task is to take the following messy AI-generated text and output only the clean body of the cover letter.
+You are an automated text-cleaning tool. Your task is to take the following messy AI-generated text and output only the clean body of the cover letter.
 
 REMOVE any address blocks, date blocks, or contact info at the top.
 
@@ -99,7 +105,7 @@ REMOVE all AI artifacts, conversational filler (e.g., 'Here is the letter'), ran
 
 PRESERVE the exact wording, phrasing, and structure of the core paragraphs. Do not paraphrase, do not 'improve' the grammar, and do not alter the professional tone.
 
-Output only the cleaned letter text. Do not include any introductory or concluding remarks."
+Output only the cleaned letter text. Do not include any introductory or concluding remarks.
 
 ---
 

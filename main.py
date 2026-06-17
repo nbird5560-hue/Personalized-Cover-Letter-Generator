@@ -9,6 +9,7 @@ from pathlib import Path
 import time
 import sys
 import math
+import os
 
 start_time = time.time()
 # Loading resume
@@ -55,7 +56,8 @@ printss("Revising Cover Letter")
 revised_letter = revise_cover_letter(
     letter,
     job[0],
-    resume
+    resume,
+    style
 )
 
 printss("Smoothing Cover Letter")

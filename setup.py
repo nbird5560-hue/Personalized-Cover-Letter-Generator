@@ -28,7 +28,7 @@ for folder, description in zip(paths, uses):
 
 printss("File Structure Setup Complete")
 
-input("Populated the 'resumes' and 'writing_samples folders under the data subdirectory, then press Enter to continute.")
+input("Populate the 'resumes' and 'writing_samples folders under the data subdirectory, then press Enter to continute.")
 
 # Internal Resume Building
 def collapse_resumes():
@@ -67,6 +67,5 @@ if style_index == 0:
     printss("Analyzing Writing Style... This make take a few minutes")
     create_style_profile()
     printss("Style Profile Created")
-
 
 Chimes.ending_chime()
