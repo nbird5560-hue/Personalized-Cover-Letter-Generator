@@ -1,7 +1,7 @@
 The Prosperity Public License 3.0.0
-Contributor: $Nicholas Zaven Bird
+Contributor: Nicholas Zaven Bird
 
-Source Code: $https://github.com/nbird5560-hue/Personalized-Cover-Letter-Generator/
+Source Code: https://github.com/nbird5560-hue/Personalized-Cover-Letter-Generator/
 
 Purpose
 This license allows you to use and share this software for noncommercial purposes for free and to try this software for commercial purposes for thirty days.
