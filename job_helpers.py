@@ -38,7 +38,6 @@ def remediate_prior_abort():
         queue = f1.read()
     with open(dpt("in_progress"), 'r') as f2:
         in_progress = f2.read()
-
     if queue or in_progress:
         with open(dpt("job"), 'r+') as f3:
             job = f3.read()
@@ -57,7 +56,7 @@ def remediate_prior_abort():
             case 2:
                 new_contents = job
 
-        print(new_contents) # Debugging
+        #print(new_contents) # Debugging
 
         with open(dpt("job"), "w") as f3:
             f3.write(new_contents)
@@ -68,9 +67,36 @@ def remediate_prior_abort():
 def completed_options():
     with open(dpt("completed"), 'r') as f:
         items = [line for line in f.read().splitlines() if line.strip()]
-        fl = f"First:\n {items[0]}\nLast: {items[len(items)-1]}"
+        fl = f"First:\n{items[0]}\nLast:\n{items[len(items)-1]}"
 
     if items:
         selected, index = pick(["No", "Yes"], "Output log of previous job(s) detected:\n" + fl + "\n Clear log?")
         if index:
             wipe_file("completed")
+
+
+import subprocess
+import time
+import urllib.request
+
+def ensure_ollama_running():
+    print("Checking Ollama status...")
+    try:
+        # Check if the Ollama server is already responding
+        urllib.request.urlopen("http://localhost:11434", timeout=2)
+        print("Ollama is already running.")
+    except Exception:
+        print("Ollama is not running. Spinning it up now...")
+        try:
+            # Launch Ollama as a background process (detached)
+            subprocess.Popen(
+                ["ollama", "serve"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                creationflags=subprocess.CREATE_NO_WINDOW # Windows-specific flag
+            )
+            # Give the server a few seconds to fully initialize
+            time.sleep(4) 
+            print("Ollama started successfully.")
+        except FileNotFoundError:
+            print("Error: 'ollama' command not found. Is it installed and added to your PATH?")

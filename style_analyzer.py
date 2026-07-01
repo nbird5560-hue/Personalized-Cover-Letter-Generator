@@ -24,7 +24,7 @@ Do not say "Okay", do not explain your thinking. Output ONLY the final generated
 
 """
 
-    response = ask_llm(prompt, "qwen3:4b")
+    response = ask_llm(prompt, "deepseek-r1:8b")
 
     with open("data/profile.txt", 'w') as f:
         f.write(response)

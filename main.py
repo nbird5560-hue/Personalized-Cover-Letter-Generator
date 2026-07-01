@@ -1,21 +1,22 @@
-from cover_letter_writer import (write_cover_letter, revise_cover_letter, smooth_cover_letter)
+from cover_letter_writer import (write_cover_letter, revise_cover_letter)
 from scraper import load_job_description
 from output_file_creation import choose_output_type
 from description_analysis import analyze_job_description
 from config import (printss, Chimes)
-#from criticism_generator import revise_cover_letter
-
+import job_helpers
 from pathlib import Path
 import time
 import sys
 import math
-import os
 
 start_time = time.time()
 # Loading resume
 printss("Loading Resume")
 
 queued = 1 if len(sys.argv) >= 3 else None
+
+if queued is None:
+    job_helpers.ensure_ollama_running()
 
 if Path("data/collapsed_resume.txt").is_file():
     with open("data/collapsed_resume.txt", 'r') as f:
@@ -34,9 +35,11 @@ else:
 
 # Loading Job Description
 printss("Loading job description")
-if queued:
+if queued is not None:
+    print("with sys.arg")
     job = load_job_description(sys.argv[1])
 else:
+    print("with no sys.arg input")
     job = load_job_description()
 printss("Job description loaded")
 
@@ -44,24 +47,27 @@ printss("Analyzing Job Description")
 job_notes = analyze_job_description(job[0], resume)
 Chimes.progress_chime()
 
-printss("Initializing cover letter creation")   
+printss("Writing Cover Letter")   
 letter = write_cover_letter(
     resume,
     style,
+    job_notes,
     job[0]
 )
 Chimes.progress_chime()
 
 printss("Revising Cover Letter")
-revised_letter = revise_cover_letter(
+final_letter = revise_cover_letter(#revised_letter
     letter,
     job[0],
     resume,
     style
 )
 
-printss("Smoothing Cover Letter")
-final_letter = smooth_cover_letter(revised_letter)
+final_letter = final_letter.full_text
+
+#printss("Smoothing Cover Letter")
+#final_letter = smooth_cover_letter(revised_letter)
 
 printss("Internal processes ended")
 # Timing

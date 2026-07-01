@@ -38,7 +38,7 @@ def get_job_description(link=None):
 
         # Check for Simplify
         elif "simplify.jobs" in url:
-            match = re.search(r"jobId=([a-zA-Z0-9\-]+)", url)
+            match = re.search(r"jobId=([a-zA-Z0-9\-]+)", url, re.IGNORECASE)
             if match:
                 job_id = match.group(1)
                 return f"https://simplify.jobs/p/{job_id}", "simplify"
@@ -172,7 +172,7 @@ from config import Chimes
 
 def load_job_description(link=None):
 
-    if not link:
+    if not link: # None is falsy, empty string is falsy
         Chimes.input_chime()
         options = ["url (LinkedIn, Indeed, Simplify)", "paste description into terminal"]
         selected, index = pick(options, "Chose Job Description")

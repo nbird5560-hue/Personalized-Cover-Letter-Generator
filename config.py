@@ -7,6 +7,9 @@ import docx
 import inspect
 
 class Chimes:
+    """
+    A class of audio cues for progress updates
+    """
     @staticmethod
     def chime1():
         t1 = threading.Thread(target=winsound.Beep, args=(988, 250))
@@ -43,13 +46,19 @@ class Chimes:
 
 
 def printss(string):
+    """
+    Prints a formatted string wrapped in '----'s
+    """
     caller_frame = inspect.stack()[1]
     caller_module = inspect.getmodule(caller_frame[0])
-    if not "AS_SUBPROCESS" in os.environ or  caller_module.__name__ == "task_manager.py": 
+    if not "AS_SUBPROCESS" in os.environ or caller_module.__name__ == "task_manager.py": 
         print("\n----" + string + "----")
 
 
 def extract_text_from_dir(path, setup_instruction="Run setup.py and follow the instructions as given."):
+    """
+    Extracts text from a set of .pdf files on a specified path. 
+    """
     if not (path.exists() and path.is_dir()):
         raise FileNotFoundError(f"The {path} directory does not exist.\n{setup_instruction}")
         
@@ -112,9 +121,15 @@ def nsep(*args):
     return "\n".join(str(item) for item in args)    
 
 def load_resume():
+    """
+    Extracts text from resume .pdf files in './data/resume' subdirectory 
+    """
     path = Path("data/resume")
     return extract_text_from_dir(path)
 
 def load_writing_samples():
+    """
+    Extracts text from user sample cover letters .pdf files in './data/writing_samples' subdirectory 
+    """
     path = Path("data/writing_samples")
     return extract_text_from_dir(path)

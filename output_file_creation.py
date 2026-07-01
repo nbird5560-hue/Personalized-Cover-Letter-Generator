@@ -6,15 +6,30 @@ from docx.shared import Inches
 import re
 from llm import clean_xml_string
 
-def choose_output_type(text, role, company, input_index=None):
+def get_unique_path(path: Path) -> Path:
+    """If file exists, appends (1), (2), etc. until a unique name is found."""
+    if not path.exists():
+        return path
+    
+    stem = path.stem
+    suffix = path.suffix
+    directory = path.parent
+    counter = 1
+    
+    new_path = directory / f"{stem}({counter}){suffix}"
+    while new_path.exists():
+        counter += 1
+        new_path = directory / f"{stem}({counter}){suffix}"
+        
+    return new_path
 
+def choose_output_type(text, role, company, input_index=None):
     if input_index is None:
         options = ['.docx', '.pdf', '.txt', 'at terminal']
         selected, index = pick(options, "Pick output type: ")
     else:
         index = input_index
 
-    # Defining and safely creating the output directory
     output_dir = Path("./outputs")
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -24,21 +39,17 @@ def choose_output_type(text, role, company, input_index=None):
     def strip_destination(path):
         return str(path).replace("outputs\\", "").replace("outputs/", "")
 
-    # Constructing clean paths using pathlib
     base_filename = clean_filename(f"{company} - {role} - Cover Letter")
 
-    pdf_path = output_dir / f"{base_filename}.pdf"
-    docx_path = output_dir / f"{base_filename}.docx"
-    txt_path = output_dir / f"{base_filename}.txt"
+    # Use the helper to resolve unique paths before saving
+    pdf_path = get_unique_path(output_dir / f"{base_filename}.pdf")
+    docx_path = get_unique_path(output_dir / f"{base_filename}.docx")
+    txt_path = get_unique_path(output_dir / f"{base_filename}.txt")
     
-
-    #text = re.sub(r"\. (.)",".  \1", text) 
-    #text = re.sub(r"—",", ", text)
     text = clean_xml_string(text)
 
     def handle_case(index):
         match index:
-
             case 0: # .docx
                 doc = Document()                
                 for section in doc.sections:
@@ -57,7 +68,6 @@ def choose_output_type(text, role, company, input_index=None):
                 pdf.add_page()
                 pdf.set_font("Helvetica", size=11)
                 pdf.multi_cell(w=0, h=5, txt=text)
-                
                 pdf.output(str(pdf_path))
                 print(f"PDF Generated at: {pdf_path}")
                 return(strip_destination(pdf_path))
