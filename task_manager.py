@@ -2,7 +2,7 @@ import subprocess
 import sys
 import os
 import session_info
-import datetime
+from datetime import datetime
 from pick import pick
 from config import (printss, Chimes)
 import job_helpers

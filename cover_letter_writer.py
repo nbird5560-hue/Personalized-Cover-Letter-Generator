@@ -7,28 +7,35 @@ from llm import ask_llm
 # Define the structured layout for your cover letters
 class CoverLetterSchema(BaseModel):
     salutation: str = Field(description="The formal greeting line, e.g., 'Dear Hiring Team,'")
-    body_paragraphs: List[str] = Field(description="The body content split into paragraphs.")
+    opening_paragraph: str = Field(description="Opening paragraph with an engaging hook. State the position you are applying to and a reason why you are excited about the role.")
+    middle_paragraphs: List[str] = Field(description="Two middle body paragraphs. Highlight on the two most employer-related accomplishments, experiences, or projects and explain how your unique skills can help the employer solve their current challenges.")
+    closing_paragraph: str = Field(description="A final paragraph assuring the reader of the user's ability to work for the hiring company and thanking the reader for considering the user's application")
     sign_off: str = Field(description="The closing phrase and signature name, e.g., 'Sincerely,\nJane Doe'")
 
-    # Programmatic cleanup: Pydantic fixes text formatting constraints automatically!
-    @field_validator("body_paragraphs", mode="after")
     @classmethod
-    def enforce_formatting_constraints(cls, paragraphs: List[str]) -> List[str]:
-        cleaned_paragraphs = []
-        for paragraph in paragraphs:
-            # 1. Remove emdashes
-            p = paragraph.replace("–", "-")
-            # 2. Force exactly two spaces after every period (collapsing existing multi-spaces first)
-            p = re.sub(r'\.\s+', '.  ', p)
-            cleaned_paragraphs.append(p)
-        return cleaned_paragraphs
+    def _clean_text(cls, text: str) -> str:
+        text = text.replace("\u2014", "-")
+        text = re.sub(r'\.\s+', '.  ', text)
+        return text
+    
+    # Programmatic cleanup: Pydantic fixes text formatting constraints automatically!
+    @field_validator("opening_paragraph", "middle_paragraphs", "closing_paragraph", mode="after")
+    @classmethod
+    def enforce_formatting_constraints(cls, value: any) -> any:
+        if isinstance(value, list):
+            return [cls._clean_text(p) for p in value]
+        return cls._clean_text(value)
 
     # Helper property to seamlessly compile the object back into a text string
     @property
     def full_text(self) -> str:
-        body = "\n\n".join(self.body_paragraphs)
+        body_sections = [
+            self.opening_paragraph,
+            *self.middle_paragraphs,
+            self.closing_paragraph
+        ]
+        body = "\n\n".join(body_sections)
         return f"{self.salutation}\n\n{body}\n\n{self.sign_off}"
-
 
 # Write initial cover letter
 def write_cover_letter(resume, style_profile, writing_strategy, job_description) -> CoverLetterSchema:
@@ -41,8 +48,8 @@ You are an expert career coach writing a tailored cover letter.
 1. Write a professional cover letter under 500 words based on the strategy.
 2. Rely strictly on experiences and projects from the resume.
 3. Projects occurring at the same time as experiences are not always related to the experience role.
-4. Match the tone in the STYLE PROFILE.
-5. Crucial: Do NOT use overly enthusiastic corporate clichés.
+4. Crucial: Match the tone in the STYLE PROFILE.
+5. Do NOT use overly enthusiastic corporate clichés.
 6. In your 'sign_off' data field, include ONLY a standard formal closing and your name (e.g., "Sincerely,\n[Name]"). Do not append system instructions or commentary.
 
 [CONTEXT DATA]

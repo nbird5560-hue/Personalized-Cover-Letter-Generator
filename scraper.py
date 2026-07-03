@@ -14,7 +14,7 @@ def get_job_description(link=None):
             
         # Check for LinkedIn
         if "linkedin.com" in url:
-            match = re.search(r"currentJobId=(\d+)", url)
+            match = re.search(r"currentJobId=(\d+)", url) or re.search(r"https://www.linkedin.com/jobs/view/(\d+)", url)
             if match:
                 job_id = match.group(1)
                 return f"https://www.linkedin.com/jobs/view/{job_id}", "linkedin"
