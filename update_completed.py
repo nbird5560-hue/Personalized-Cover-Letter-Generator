@@ -18,7 +18,7 @@ def run_selection(contents):
         remove = contents[index]
 
         if remove == "Clear All":
-            wipe_file(contents)
+            wipe_file("completed")
             exit()
         else:
             contents = [item for item in contents if item != remove]

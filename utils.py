@@ -118,7 +118,7 @@ def nsep(*args):
         items = args[0]
     else:
         items = args
-    return "\n".join(str(item) for item in args)    
+    return "\n".join(str(item) for item in items)    
 
 def load_resume():
     """

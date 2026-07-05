@@ -2,7 +2,7 @@ from cover_letter_writer import (write_cover_letter, revise_cover_letter)
 from scraper import load_job_description
 from output_file_creation import choose_output_type
 from description_analysis import analyze_job_description
-from config import (printss, Chimes)
+from utils import (printss, Chimes)
 import job_helpers
 from pathlib import Path
 import time

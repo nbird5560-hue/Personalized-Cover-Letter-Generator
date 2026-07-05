@@ -1,5 +1,5 @@
 from llm import ask_llm
-from config import extract_text_from_dir
+from utils import extract_text_from_dir
 from pathlib import Path
 
 def create_style_profile():

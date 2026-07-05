@@ -185,8 +185,10 @@ def load_job_description(link=None):
             else:
                 return get_job_description()
         case 1:
-            text = input("Paste description into terminal")
+            text = input("Paste description into terminal: ")
             if not text:
                 raise ChildProcessError("Invalid input") 
             else:
-                return text
+                role = input("Enter job title/role: ").strip() or "Role"
+                company = input("Enter company name: ").strip() or "Company"
+                return [text, role, company, None]

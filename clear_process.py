@@ -9,15 +9,11 @@ arg_len = len(sys.argv)
 
 
 if arg_len == 1:
-    arg = sys.argv[0]# Should be string
     files = os.listdir(dpt(None))
     options = ["--Clear All--"]
     options.extend(files)
     options.append("--Exit--")
 
-
-    to_clear = ""
-    close_cases = ['--Exit--', '--Clear All--']
     while True:
         selected, index = pick(options, "Clear which file?")
         to_clear = options[index]
@@ -26,9 +22,9 @@ if arg_len == 1:
             case "--Exit--":
                 exit()
             case "--Clear All--":
-                for item in to_clear-close_cases:
-                    wipe_file(item)
-                    exit()
+                for item in files:
+                    wipe_file(re.sub(r'\..+$', '', item))
+                exit()
             case _:
                 wipe_file(to_clear)
         

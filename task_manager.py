@@ -32,7 +32,6 @@ with open(dpt("queue"), 'r') as f:
     queue = [line for line in f.read().splitlines() if line.strip()]
 queue_length = len(queue) 
 print(f"--Starting Job with {queue_length} items")
-exit()
 for item in queue:
     item.strip() # safety operations in case user manually modifies queue.txt
     item.strip("\n") 
