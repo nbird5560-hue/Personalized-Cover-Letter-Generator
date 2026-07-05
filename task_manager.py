@@ -33,9 +33,8 @@ with open(dpt("queue"), 'r') as f:
 queue_length = len(queue) 
 print(f"--Starting Job with {queue_length} items")
 for item in queue:
-    item.strip() # safety operations in case user manually modifies queue.txt
-    item.strip("\n") 
-    printss(f"--{job_helpers.queue_length()} items remaining in queue")
+    item = item.strip() # safety operations in case user manually modifies queue.txt
+    print(f"--{job_helpers.queue_length()} items remaining in queue")
     job_helpers.update_queue(item) # Update queue.txt and in_progress.txt
     result = subprocess.run(
         [sys.executable, "-u", "main.py", item, str(index)],

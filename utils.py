@@ -120,13 +120,6 @@ def nsep(*args):
         items = args
     return "\n".join(str(item) for item in items)    
 
-def load_resume():
-    """
-    Extracts text from resume .pdf files in './data/resume' subdirectory 
-    """
-    path = Path("data/resume")
-    return extract_text_from_dir(path)
-
 def load_writing_samples():
     """
     Extracts text from user sample cover letters .pdf files in './data/writing_samples' subdirectory 
