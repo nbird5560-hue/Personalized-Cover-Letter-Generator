@@ -168,7 +168,7 @@ def get_job_description(link=None):
 
 
 from pick import pick
-from config import Chimes
+from utils import Chimes
 
 def load_job_description(link=None):
 

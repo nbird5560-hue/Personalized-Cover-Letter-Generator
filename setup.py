@@ -1,10 +1,10 @@
 from pathlib import Path
-from config import extract_text_from_dir
+from utils import extract_text_from_dir
 from llm import ask_llm
-from config import (Chimes, printss)
+from utils import (Chimes, printss)
 from style_analyzer import create_style_profile
 from pick import pick
-from config import printss
+from utils import printss
 
 paths = ["writing_samples", "resumes", "process"]
 uses = ["your example cover letters", "your résumé", None]
