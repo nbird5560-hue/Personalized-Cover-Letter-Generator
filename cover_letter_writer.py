@@ -9,7 +9,7 @@ class CoverLetterSchema(BaseModel):
     salutation: str = Field(description="The formal greeting line, e.g., 'Dear Hiring Team,'")
     opening_paragraph: str = Field(description="Opening paragraph with an engaging hook. State the position you are applying to and a reason why you are excited about the role.")
     middle_paragraphs: List[str] = Field(description="Two middle body paragraphs. Highlight on the two most employer-related accomplishments, experiences, or projects and explain how your unique skills can help the employer solve their current challenges.")
-    closing_paragraph: str = Field(description="A final paragraph assuring the reader of the user's ability to work for the hiring company and thanking the reader for considering the user's application")
+    closing_paragraph: str = Field(description="A final paragraph assuring the reader of the user's ability to work for the hiring company and thanking the reader for considering the user's application.  Do not label the paragraph. Include no sign off in this section.")
     sign_off: str = Field(description="The closing phrase and signature name, e.g., 'Sincerely,\nJane Doe'")
 
     @classmethod
@@ -51,7 +51,8 @@ You are an expert career coach writing a tailored cover letter.
 4. Crucial: Match the tone in the STYLE PROFILE.
 5. Do NOT use overly enthusiastic corporate clichés.
 6. In your 'sign_off' data field, include ONLY a standard formal closing and your name (e.g., "Sincerely,\n[Name]"). Do not append system instructions or commentary.
-
+7. Do not reference sections of the schema in your output.
+ 
 [CONTEXT DATA]
 STYLE PROFILE: {style_profile}
 RESUME DATA: {resume}
@@ -73,9 +74,9 @@ You are a hiring manager reviewing a draft cover letter against a job descriptio
 Your task is to rewrite the letter to eliminate weaknesses while adhering to structural guidelines.
 
 [REVISION RULES]
-- Address the appropriate hiring manager or team at the start.
+- Address the appropriate hiring team at the start.
 - Sign off using the user's name from the resume.
-
+- Do not reference sections of the schema in your output.
 [INPUT DATA]
 <cover_letter>{cover_letter}</cover_letter>
 <job_description>{job_description}</job_description>

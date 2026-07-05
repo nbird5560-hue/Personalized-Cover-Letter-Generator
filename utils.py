@@ -3,7 +3,6 @@ import threading
 import os
 from pathlib import Path
 from pypdf import PdfReader
-import docx
 import inspect
 
 class Chimes:
@@ -89,6 +88,7 @@ def extract_text_from_dir(path, setup_instruction="Run setup.py and follow the i
 
     # Process DOCX Files
     for docx_path in path.glob("*.docx"):
+        import docx
         # Ignore temporary/lock files Word creates (e.g., ~$document.docx)
         if docx_path.name.startswith("~$"):
             continue

@@ -4,7 +4,7 @@ import os
 import session_info
 from datetime import datetime
 from pick import pick
-from config import (printss, Chimes)
+from utils import (printss, Chimes)
 import job_helpers
 from job_helpers import dpt
 
@@ -27,16 +27,16 @@ selected, index = pick(options, "Pick output type: ")
 
 # Check for completed tasks in completed docket, and if they exist, 
 # allow user to choose what to do with them
-#job_helpers.completed_options()
 
 with open(dpt("queue"), 'r') as f:
     queue = [line for line in f.read().splitlines() if line.strip()]
 queue_length = len(queue) 
-printss("Starting Job")
+print(f"--Starting Job with {queue_length} items")
+exit()
 for item in queue:
     item.strip() # safety operations in case user manually modifies queue.txt
     item.strip("\n") 
-    printss(f"{job_helpers.queue_length()} items remaining in queue")
+    printss(f"--{job_helpers.queue_length()} items remaining in queue")
     job_helpers.update_queue(item) # Update queue.txt and in_progress.txt
     result = subprocess.run(
         [sys.executable, "-u", "main.py", item, str(index)],

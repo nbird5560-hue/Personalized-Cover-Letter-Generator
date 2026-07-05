@@ -1,9 +1,14 @@
-from config import nsep
+from utils import nsep
 from pick import pick
 
 def dpt(filename: str) -> str:
-    return "data/process/" + filename + ".txt"
-
+    
+    if filename is None:
+        extension, filename = "", ""
+    else:
+        extension = ".txt"
+    return "data/process/" + filename + extension
+    
 def wipe_file(filename: str):
     with open(dpt(filename), 'w') as f:
         f.write("")

@@ -1,7 +1,7 @@
 # llm.py
 from ollama import chat
 from pick import pick
-from config import Chimes
+from utils import Chimes
 from pydantic import BaseModel
 from typing import Type, Optional, Union
 import re
@@ -67,7 +67,9 @@ def ask_llm(
             # This allows your loop/logic to continue or retry safely.
             return response_model(
                 salutation="Dear Hiring Manager,",
-                body_paragraphs=["[Generation failed due to LLM timeout/context cutoff. Please try again.]"],
+                opening_paragraph="[Generation failed due to LLM timeout/context cutoff. Please try again.]",
+                middle_paragraphs=["[Generation failed due to LLM timeout/context cutoff. Please try again.]"],
+                closing_paragraph="[Generation failed due to LLM timeout/context cutoff. Please try again.]",
                 sign_off="Sincerely,\n[Your Name]"
             )
 
