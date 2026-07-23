@@ -8,7 +8,8 @@ import re
 
 def ask_llm(
     prompt: str, 
-    model: str = None, 
+    model: str, 
+    system_prompt: Optional[str] = None,  # Added system_prompt parameter
     temp: float = 0.5, 
     response_model: Optional[Type[BaseModel]] = None
 ) -> Union[str, BaseModel]:
@@ -17,16 +18,16 @@ def ask_llm(
         if temp >= 1 or temp < 0:
             raise ValueError("Value of Temp argument must be in [0, 1).")
 
-    if not model:
-        models = ["gemma3:4b", "gemma4:e4b", "qwen3:4b", "deepseek-r1:8b"]
-        Chimes.input_chime()
-        selected, index = pick(models, "Pick LLM Model")
-        model = models[index]
+    # Build the messages array dynamically
+    messages = []
+    if system_prompt:
+        messages.append({"role": "system", "content": system_prompt})
+    messages.append({"role": "user", "content": prompt})
 
     # Set up the default chat arguments
     chat_kwargs = {
         "model": model,
-        "messages": [{"role": "user", "content": prompt}],
+        "messages": messages,
         "stream": False,
         "options": {
             "temperature": temp,
@@ -64,7 +65,6 @@ def ask_llm(
             print(f"[!] Validation Error: {json_err}")
             
             # Fallback: Return an empty instance of your schema so main.py doesn't crash
-            # This allows your loop/logic to continue or retry safely.
             return response_model(
                 salutation="Dear Hiring Manager,",
                 opening_paragraph="[Generation failed due to LLM timeout/context cutoff. Please try again.]",
