@@ -1,7 +1,9 @@
 from cover_letter_writer import (write_cover_letter, revise_cover_letter)
 from scraper import load_job_description
 from output_file_creation import choose_output_type
-from description_analysis import analyze_job_description
+#from description_analysis import analyze_job_description
+from jd_parser import parse_job_description
+from strategy_mapper import generate_strategy
 from utils import (printss, Chimes)
 import job_helpers
 from pathlib import Path
@@ -44,30 +46,30 @@ else:
 printss("Job description loaded")
 
 printss("Analyzing Job Description")
-job_notes = analyze_job_description(job[0], resume)
+parsed_jd = parse_job_description(job[0])
+
+printss("Creating Writing Strategy")
+writing_strategy = generate_strategy(parsed_jd=parsed_jd, resume_text=resume)
+
 Chimes.progress_chime()
 
 printss("Writing Cover Letter")   
 letter = write_cover_letter(
-    resume,
-    style,
-    job_notes,
-    job[0]
+    resume=resume,
+    style_profile=style,
+    strategy=writing_strategy,
 )
 Chimes.progress_chime()
 
 printss("Revising Cover Letter")
 final_letter = revise_cover_letter(#revised_letter
-    letter,
-    job[0],
-    resume,
-    style
+    cover_letter=letter,
+    strategy=writing_strategy,
+    resume=resume,
+    style_profile=style
 )
 
 final_letter = final_letter.full_text
-
-#printss("Smoothing Cover Letter")
-#final_letter = smooth_cover_letter(revised_letter)
 
 printss("Internal processes ended")
 # Timing
