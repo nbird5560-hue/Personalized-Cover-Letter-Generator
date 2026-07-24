@@ -50,7 +50,17 @@ class WritingStrategy(BaseModel):
         description="Key job requirements that the candidate lacks on their resume. Use this to avoid making false assertions."
     )
 
-MAPPER_SYSTEM_PROMPT = """You are a precision talent analyst.
+class SkillComparison(BaseModel):
+    skills: List[str] = Field(
+        min_length=3,
+        max_length=5,
+        description="Top 3-5 skills or proficiencies required by job description that are supported by the user's resume"
+    )
+
+
+
+def generate_strategy(parsed_jd: ParsedJobDescription, resume_text: str) -> WritingStrategy:
+    MAPPER_SYSTEM_PROMPT = """You are a precision talent analyst.
 Map the target job requirements to the candidate's resume.
 
 [CRITICAL GROUNDING RULES]
@@ -58,8 +68,7 @@ Map the target job requirements to the candidate's resume.
 2. If the candidate lacks direct experience for a requirement, mark confidence as 'TRANSFERABLE_SKILL' or 'WEAK_MATCH'—DO NOT invent or exaggerate experience.
 3. If a key JD skill is completely missing from the resume, log it in `missing_skill_warnings`.
 """
-
-def generate_strategy(parsed_jd: ParsedJobDescription, resume_text: str) -> WritingStrategy:
+    
     user_prompt = f"""
 [PARSED JOB DESCRIPTION]
 Title: {parsed_jd.job_title} at {parsed_jd.company_name}
@@ -77,3 +86,29 @@ Core Pain Point: {parsed_jd.key_pain_point}
         temp=0.1,
         response_model=WritingStrategy
     )
+
+def match_skills(parsed_jd: ParsedJobDescription, resume_text: str) -> SkillComparison:
+    SKILLS_MATCHER_SYSTEM_PROMPT = """You are a precision talent analyst.
+Map required skills and compentencies to the candidate's resume
+
+[CRITICAL RULES]
+1. Matched skills and proficiencies must be supported by candidate's resume.
+2. Skills / proficiencies more relevant to the job description should be prioritized. 
+"""
+
+    user_prompt = f"""
+[PARSED JOB DESCRIPTION]
+{parsed_jd}
+
+[RESUME]
+{resume_text}
+"""
+    return ask_llm(
+        system_prompt=SKILLS_MATCHER_SYSTEM_PROMPT,
+        prompt=user_prompt,
+        model=config.JD_DEFAULT_MODEL,
+        temp=0.1,
+        response_model=SkillComparison
+    )
+
+

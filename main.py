@@ -1,9 +1,8 @@
 from cover_letter_writer import (write_cover_letter, revise_cover_letter)
 from scraper import load_job_description
 from output_file_creation import choose_output_type
-#from description_analysis import analyze_job_description
 from jd_parser import parse_job_description
-from strategy_mapper import generate_strategy
+from strategy_mapper import (generate_strategy, match_skills)
 from utils import (printss, Chimes)
 import job_helpers
 from pathlib import Path
@@ -43,10 +42,13 @@ if queued is not None:
 else:
     print("with no sys.arg input")
     job = load_job_description()
-printss("Job description loaded")
 
 printss("Analyzing Job Description")
 parsed_jd = parse_job_description(job[0])
+
+printss("Identifying Skill Overlap")
+matched_skills = match_skills(parsed_jd=parsed_jd, resume_text=resume)
+print(f"DEBUG: Matched Skills: {matched_skills}")# REMOVE
 
 printss("Creating Writing Strategy")
 writing_strategy = generate_strategy(parsed_jd=parsed_jd, resume_text=resume)
@@ -58,14 +60,21 @@ letter = write_cover_letter(
     resume=resume,
     style_profile=style,
     strategy=writing_strategy,
+    skills=matched_skills
 )
 Chimes.progress_chime()
+
+#print(letter)
+#quit()
+
+
 
 printss("Revising Cover Letter")
 final_letter = revise_cover_letter(#revised_letter
     cover_letter=letter,
     strategy=writing_strategy,
     resume=resume,
+    skills=matched_skills,
     style_profile=style
 )
 
